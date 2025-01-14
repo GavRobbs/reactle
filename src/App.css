@@ -1,0 +1,115 @@
+header{
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  padding: 0.4em;
+  background-color: #904C77;
+  font-family: 'Noto Sans';
+}
+
+header > h1{
+  color: #F3E5AB;
+  font-size: 1.5em;
+  font-weight: 700;
+}
+
+main{
+  padding: 1.5em 0.2em 0.2em 0.5em;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  max-width: 100%;
+  background-color: ivory;
+}
+
+main > section{
+
+  margin-block: 1.2em;
+
+}
+
+main > section#description > p{
+  font-family: "Roboto", serif;
+  font-weight: 500;
+  width: 100%;
+  max-width: 400px;
+}
+
+main > section#attempts{
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  gap: 1em;
+  justify-content: space-between;
+  align-items: center;
+}
+
+main > section#attempts > .attempt > span{
+  display: inline-block;
+  font-family: "Roboto", serif;
+  font-weight: 700;
+  background-color: #ECCFC3;
+  font-size: 1.5em;
+  padding: 0.5em;
+  margin: 0.2em;
+  width: 2em;
+  height: 2em;
+  border-radius: 6px;
+  border-bottom: 5px solid #ECB8A5;
+  text-align: center;
+  align-self: center;
+  vertical-align: middle;
+  line-height:1em;
+}
+
+main > section#attempts > .attempt > span.correct{
+
+  background-color: #C1E1C1;
+  border-bottom: 5px solid #8A9A5B;
+ 
+}
+
+main > section#replay > button{
+  outline: none;
+  box-shadow: none;
+  border: 0px;
+  font-family: "Roboto", serif;
+  font-size: 1.5em;
+  font-weight: 700;
+  padding: 1em;
+  color: #F3E5AB;
+  
+}
+
+main > section#replay > button.winbutton{
+  border-radius: 8px;
+  background-color: #904C77;
+  border-bottom: 5px solid #854c90;
+}
+
+main > section#replay > button.losebutton{
+
+  outline: none;
+  border: 0px;
+  border-radius: 8px;
+  background-color: #FF0000;
+  border-bottom: 5px solid #A52A2A;
+
+}
+
+main > section#attempts > .attempt > span.incorrect{
+
+  background-color: #FF0000;
+  border-bottom: 5px solid #A52A2A;
+ 
+}
+
+main > section#attempts > .attempt > span.misplaced{
+
+  background-color: #FCF55F;
+  border-bottom: 5px solid #FFD700;
+ 
+}
