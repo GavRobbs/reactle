@@ -36,6 +36,7 @@ main > section#description > p{
   font-weight: 500;
   width: 100%;
   max-width: 400px;
+  text-align: center;
 }
 
 main > section#attempts{
