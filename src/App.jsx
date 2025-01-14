@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { checkWord, getRandomWord } from './utils/utils';
 import Confetti from "react-confetti";
 import AttemptLine from './components/AttemptLine'
@@ -20,6 +20,8 @@ function App() {
     awaitingEnter : false,
     currentLine : 0
   });
+
+  const statusButtonRef = useRef(null); 
 
   //Derived variables here
   const gameWon = currentGuesses.guessData.includes(currentWord) && currentGuesses.awaitingEnter == false;
@@ -171,11 +173,13 @@ function App() {
 
       const audio = new Audio(YaySound);
       audio.play();
+      statusButtonRef.current.scrollIntoView({behaviour: "smooth"});
 
     } else if(gameLost){
 
       const audio = new Audio(BooSound);
       audio.play();
+      statusButtonRef.current.scrollIntoView({behaviour: "smooth"});
 
     }
     
@@ -219,8 +223,8 @@ function App() {
         </section>
 
         <section id="replay">
-          {gameWon && <button className="winbutton" onClick={replay}>You won! Play again?</button>}
-          {gameLost && <button className="losebutton" onClick={replay}>You lost! Play again?</button>}
+          {gameWon && <button className="winbutton" ref={statusButtonRef} onClick={replay}>You won! Play again?</button>}
+          {gameLost && <button className="losebutton" ref={statusButtonRef} onClick={replay}>You lost! Play again?</button>}
         </section>
 
       {gameWon && <Confetti />}
