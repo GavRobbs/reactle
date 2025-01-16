@@ -179,7 +179,6 @@ main > section#attempts > .attempt > span.misplaced{
   padding: 0.5em;
   background-color: #FCFCFC;
   text-transform: uppercase;
-  max-height: 300px;
   min-width: 2em;
   text-align: center;
 }
@@ -188,8 +187,31 @@ main > section#attempts > .attempt > span.misplaced{
   background-color: #904C77;
 }
 
-@media (max-width: 768px) {
+/* I really battled with these */
+
+@media (max-width: 767px) {
   html {
-      font-size: 14px; /* Smaller base size for smaller screens */
+      font-size: 14px;
   }
+
+  #keyboardcontainer{
+    padding: 0.5em;
+  }
+
+  .letterbutton{
+    font-size: 1.2em;
+    min-width: 1.5em;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1024px) {
+
+  main > section#attempts > .attempt > span{
+    width: 5vw;
+    height: 4vh;
+  }
+}
+
+@media (min-width: 1025px) {
+
 }
