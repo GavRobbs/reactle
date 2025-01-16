@@ -211,9 +211,18 @@ main > section#attempts > .attempt > span.misplaced{
 
 @media (min-width: 768px) and (max-width: 1024px) {
 
+  main > section#attempts{
+    height: 60vh;
+    max-height: 60vh;
+    justify-content: flex-start;
+  }
+
   main > section#attempts > .attempt > span{
-    width: 5vw;
-    height: 4vh;
+    font-size: 1.5em;
+    padding: 0.3em;
+    margin: 0.1em;
+    width: 1.6em;
+    height: 1.6em;
   }
 }
 
@@ -252,6 +261,32 @@ main > section#attempts > .attempt > span.misplaced{
 }
 
 @media (min-width: 1025px) and (min-height: 700px) {
+
+  main > section#attempts{
+    height: 60vh;
+    max-height: 60vh;
+    justify-content: flex-start;
+  }
+
+  #keyboardcontainer{
+    height: 20vh;
+    max-height: 20vh;
+    padding: 2vh;
+  }
+
+  main > section#attempts > .attempt > span{
+    font-size: 1.5em;
+    padding: 0.3em;
+    margin: 0.1em;
+    width: 1.7em;
+    height: 1.7em;
+    border-radius: 6px;
+    border-bottom: 5px solid #ECB8A5;
+    text-align: center;
+    align-self: center;
+    vertical-align: middle;
+    line-height:1em;
+  }
 
 
 
