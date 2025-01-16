@@ -219,4 +219,15 @@ main > section#attempts > .attempt > span.misplaced{
 
 @media (min-width: 1025px) {
 
+  #attempts{
+    height: 50vh;
+    max-height: 50vh;
+  }
+
+  #keyboardcontainer{
+    height: 20vh;
+    max-height: 20vh;
+    padding: 2vh;
+  }
+
 }
