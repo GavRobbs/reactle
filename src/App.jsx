@@ -21,11 +21,14 @@ function App() {
     currentLine : 0
   });
 
-  const statusButtonRef = useRef(null); 
+  const statusButtonRef = useRef(null);
+
+  const letters = "abcdefghijklmonpqrstuvwxyz";
 
   //Derived variables here
   const gameWon = currentGuesses.guessData.includes(currentWord) && currentGuesses.awaitingEnter == false;
   const gameLost = !currentGuesses.guessData.includes(currentWord) && currentGuesses.cursorPosition >= 30 && currentGuesses.awaitingEnter == false;
+  const gameOver = gameWon || gameLost;
 
   function addCharacter(event){
 
@@ -158,6 +161,20 @@ function App() {
 
   }
 
+  function synthetic_input(letter){
+
+    //I use these to fake key events from the keyboard
+    if(letter == "Enter"){
+      addCharacter({key:"Enter"});
+    }
+    else if(letter == "Backspace"){
+      addCharacter({key:"Backspace"});
+    }
+    else{
+      addCharacter({key:letter});
+    }
+  }
+
   useEffect(() => {
     //The dependencies on these allow us to block input when the player has won or lost the game
     document.addEventListener("keyup", addCharacter);
@@ -222,16 +239,41 @@ function App() {
           <SolutionLine gameLost={gameLost} word={currentWord}/>
         </section>
 
-        <section id="replay">
-          {gameWon && <button className="winbutton" ref={statusButtonRef} onClick={replay}>You won! Play again?</button>}
-          {gameLost && <button className="losebutton" ref={statusButtonRef} onClick={replay}>You lost! Play again?</button>}
-        </section>
+        <div id="keyboardcontainer">
+          <div id="keyboard">
+          <button className="letterbutton" onClick={()=>synthetic_input("Backspace")}>⌫</button>
+            {
+              [...letters].map((l, index) => {
+                return <button key={index} className="letterbutton" onClick={()=>synthetic_input(l)}>{l}</button>
+              })
+            }
+            <button className="letterbutton" onClick={()=>synthetic_input("Enter")}>⏎</button>
+          </div>
+        </div>
+
+        { gameOver && 
+        <div className="replay-dialog-overlay">
+          <div className="replay-dialog">
+            {gameWon && 
+            <>
+              <h1 className="replay-dialog-header">You won!</h1>
+              <button className="winbutton" ref={statusButtonRef} onClick={replay}>Play again?</button>
+            </>
+            }
+            {gameLost && 
+            <>
+              <h1 className="replay-dialog-header">You lost!</h1>
+              <button className="losebutton" ref={statusButtonRef} onClick={replay}>Play again?</button>
+            </>
+            }
+          </div>
+        </div>
+        }
 
       {gameWon && <Confetti />}
 
 
       </main>
-      <footer></footer>
     </>
   )
 }
