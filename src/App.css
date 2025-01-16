@@ -217,11 +217,12 @@ main > section#attempts > .attempt > span.misplaced{
   }
 }
 
-@media (min-width: 1025px) {
+@media (min-width: 1025px) and (max-height: 699px) {
 
-  #attempts{
-    height: 50vh;
-    max-height: 50vh;
+  main > section#attempts{
+    height: 30vh;
+    max-height: 30vh;
+    gap: 0.2em;
   }
 
   #keyboardcontainer{
@@ -229,5 +230,29 @@ main > section#attempts > .attempt > span.misplaced{
     max-height: 20vh;
     padding: 2vh;
   }
+
+  main > section#attempts > .attempt > span{
+    display: inline-block;
+    font-family: "Roboto", serif;
+    font-weight: 700;
+    background-color: #ECCFC3;
+    font-size: 0.8em;
+    padding: 0.3em;
+    margin: 0.2em;
+    width: 1.8em;
+    height: 1.8em;
+    border-radius: 6px;
+    border-bottom: 5px solid #ECB8A5;
+    text-align: center;
+    align-self: center;
+    vertical-align: middle;
+    line-height:1em;
+  }
+
+}
+
+@media (min-width: 1025px) and (min-height: 700px) {
+
+
 
 }
