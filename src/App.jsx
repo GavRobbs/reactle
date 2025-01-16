@@ -263,6 +263,7 @@ function App() {
             {gameLost && 
             <>
               <h1 className="replay-dialog-header">You lost!</h1>
+              <p className="replay-dialog-info">The word is {currentWord.toUpperCase()}.</p>
               <button className="losebutton" ref={statusButtonRef} onClick={replay}>Play again?</button>
             </>
             }

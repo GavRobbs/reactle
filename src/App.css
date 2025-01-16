@@ -119,6 +119,11 @@ main > div.replay-dialog-overlay > div.replay-dialog button{
   font-family: "Roboto", serif;
 }
 
+.replay-dialog-info{
+  padding-bottom: 1em;
+  font-family: "Roboto", serif;
+}
+
 .replay-dialog {
   background-color: ivory; 
   padding: 1.5em;
