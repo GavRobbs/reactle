@@ -145,7 +145,7 @@ main > section#attempts > .attempt > span.incorrect{
 main > section#attempts > .attempt > span.misplaced{
 
   background-color: #FCF55F;
-  border-bottom: 5px solid #FFD700;
+  border-bottom: 5px solid #CAC44C;
  
 }
 
@@ -190,6 +190,27 @@ main > section#attempts > .attempt > span.misplaced{
 
 .letterbutton:hover{
   background-color: #904C77;
+}
+
+.letterbutton.right{
+
+  background-color: #C1E1C1;
+  border-bottom: 3px solid #8A9A5B;
+
+}
+
+.letterbutton.wrong{
+
+  background-color: #FF0000;
+  border-bottom: 3px solid #A52A2A;
+
+}
+
+.letterbutton.almost{
+
+  background-color: #FCF55F;
+  border-bottom: 3px solid #CAC44C;
+
 }
 
 /* I really battled with these */

@@ -1,11 +1,12 @@
 import { useState, useEffect, useRef } from 'react'
-import { checkWord, getRandomWord } from './utils/utils';
+import { checkWord, compareWord, getRandomWord } from './utils/utils';
 import Confetti from "react-confetti";
 import AttemptLine from './components/AttemptLine'
 import './App.css'
 import SolutionLine from './components/SolutionLine';
 import BooSound from './assets/boo.mp3';
 import YaySound from './assets/yay.wav';
+import clsx from 'clsx';
 
 
 function App() {
@@ -18,12 +19,14 @@ function App() {
     "     ", "     ", "     ", "     ", "     ", "     ",
     ],
     awaitingEnter : false,
-    currentLine : 0
+    currentLine : 0,
+    letters: [..."abcdefghijklmonpqrstuvwxyz"].map((l) => {
+      return {letter : l, status: 0};
+    })
   });
 
   const statusButtonRef = useRef(null);
-
-  const letters = "abcdefghijklmonpqrstuvwxyz";
+  
 
   //Derived variables here
   const gameWon = currentGuesses.guessData.includes(currentWord) && currentGuesses.awaitingEnter == false;
@@ -40,10 +43,11 @@ function App() {
       setCurrentGuesses((prev) => {
         if(prev.awaitingEnter){
 
-          if(checkWord(prev.guessData[prev.currentLine]) == false){
+          let isAWord = checkWord(prev.guessData[prev.currentLine]);
 
-            //If its not an english word, we reject it
+          if(isAWord == false){
 
+            //If its not a word in the dictionary, we reject it
             let cleared = prev.guessData.map((guess, index) => {
 
               if(prev.currentLine != index){
@@ -57,9 +61,43 @@ function App() {
 
             return {...prev, awaitingEnter: false, currentLine: prev.currentLine, cursorPosition: prev.currentLine * 5, guessData: cleared};
 
+          } else{
+            //If it is a word, we need to change the color hints appropriately
+            let newletters = structuredClone(prev.letters);
+            let testArray = compareWord(prev.guessData[prev.currentLine], currentWord);
+
+            /* This is a bit of a kludge, but here goes. The letters state is actually stored as an array of key-value pairs, in which each pair consists of a {letter: letter, status: status}. We first clone the array of pairs pair. We then iterate over testArray, which consists of an array of {[letter] : [status]}. On each iteration, we see if the current pair's letter is in the character in the key-value pair for that iteration of testArray.
+
+            If it is, we compare the status values. I deliberately ordered the status values from higher to lower with higher being more correct, and the ternary operation replaces higher values with lower values. The logic behind this is that in a
+            previous guess, you may have guessed the right letter, but put it in the wrong place, but in a subsequent guess, you may get the right letter in the right place. This logic also handles people making guesses with words with repeated letters, where one instance of the letter is correct, but the other is wrong.
+
+            If the word isn't in test array, the lapir passes through, unchanged.
+            
+            */
+
+            for(let i = 0; i < newletters.length; ++i){
+
+              for(let j = 0; j < testArray.length; ++j){
+
+                let letter = newletters[i].letter;
+
+                if(newletters[i].letter in testArray[j]){
+
+                  let testStatus = testArray[j][letter];
+                  newletters[i].status = testStatus > newletters[i].status ? testStatus : newletters[i].status;
+                }
+
+              }
+
+            }           
+
+            return {...prev, 
+              awaitingEnter: false, 
+              currentLine: prev.currentLine + 1,
+              letters: newletters};
           }
 
-          return {...prev, awaitingEnter: false, currentLine: prev.currentLine + 1};
+
         } else{
           return prev;
         }
@@ -114,6 +152,7 @@ function App() {
           let newpos = prev.cursorPosition - 1
   
           return {
+            ...prev,
             cursorPosition : newpos,
             guessData: ngd,
             awaitingEnter: false,
@@ -220,7 +259,11 @@ function App() {
       "     ", "     ", "     ", "     ", "     ", "     ",
       ],
       awaitingEnter : false,
-      currentLine : 0
+      currentLine : 0,
+      letters: [..."abcdefghijklmonpqrstuvwxyz"].map((l) => {
+        return {letter : l, status: 0};
+      })
+
     });
   }
 
@@ -243,11 +286,13 @@ function App() {
           <div id="keyboard">
           <button className="letterbutton" onClick={()=>synthetic_input("Backspace")}>⌫</button>
             {
-              [...letters].map((l, index) => {
-                return <button key={index} className="letterbutton" onClick={()=>synthetic_input(l)}>{l}</button>
-              })
+                currentGuesses.letters.map((l, index) => {
+                  return <button key={index} 
+                  className={clsx({"letterbutton" : true, "right": l.status == 3, "almost":l.status == 2, "wrong":l.status == 1})}
+                  onClick={()=>synthetic_input(l.letter)}>{l.letter}</button>
+                })
             }
-            <button className="letterbutton" onClick={()=>synthetic_input("Enter")}>⏎</button>
+            <button className='letterbutton' onClick={()=>synthetic_input("Enter")}>⏎</button>
           </div>
         </div>
 
