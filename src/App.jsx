@@ -6,6 +6,8 @@ import './App.css'
 import SolutionLine from './components/SolutionLine';
 import BooSound from './assets/boo.mp3';
 import YaySound from './assets/yay.wav';
+import NopeSound from "./assets/nope.wav";
+import InvalidSound from "./assets/invalid.mp3";
 import clsx from 'clsx';
 
 
@@ -26,7 +28,10 @@ function App() {
   });
 
   const statusButtonRef = useRef(null);
-  
+  const booSoundRef = useRef(null);
+  const yaySoundRef = useRef(null);
+  const nopeSoundRef = useRef(null);
+  const invalidSoundRef = useRef(null);
 
   //Derived variables here
   const gameWon = currentGuesses.guessData.includes(currentWord) && currentGuesses.awaitingEnter == false;
@@ -59,19 +64,22 @@ function App() {
     
             })
 
+            invalidSoundRef.current.play().catch((err) => {
+              console.log("Playback error");
+            });
+
             return {...prev, awaitingEnter: false, currentLine: prev.currentLine, cursorPosition: prev.currentLine * 5, guessData: cleared};
 
           } else{
             //If it is a word, we need to change the color hints appropriately
             let newletters = structuredClone(prev.letters);
             let testArray = compareWord(prev.guessData[prev.currentLine], currentWord);
+            let threeCount = 0;
 
             /* This is a bit of a kludge, but here goes. The letters state is actually stored as an array of key-value pairs, in which each pair consists of a {letter: letter, status: status}. We first clone the array of pairs pair. We then iterate over testArray, which consists of an array of {[letter] : [status]}. On each iteration, we see if the current pair's letter is in the character in the key-value pair for that iteration of testArray.
 
             If it is, we compare the status values. I deliberately ordered the status values from higher to lower with higher being more correct, and the ternary operation replaces higher values with lower values. The logic behind this is that in a
             previous guess, you may have guessed the right letter, but put it in the wrong place, but in a subsequent guess, you may get the right letter in the right place. This logic also handles people making guesses with words with repeated letters, where one instance of the letter is correct, but the other is wrong.
-
-            If the word isn't in test array, the lapir passes through, unchanged.
             
             */
 
@@ -84,12 +92,25 @@ function App() {
                 if(newletters[i].letter in testArray[j]){
 
                   let testStatus = testArray[j][letter];
+
+                  if(testStatus == 3){
+                    threeCount += 1;
+                  }
+
                   newletters[i].status = testStatus > newletters[i].status ? testStatus : newletters[i].status;
                 }
 
               }
 
-            }           
+            }
+
+            console.log(threeCount);
+            
+            if(threeCount < 5){
+              nopeSoundRef.current.play().catch(err => {
+                console.log("Playback error");
+              });
+            }
 
             return {...prev, 
               awaitingEnter: false, 
@@ -223,18 +244,37 @@ function App() {
 
   useEffect(() => {
 
+    const yaysnd = new Audio(YaySound);
+    yaysnd.load();
+    yaySoundRef.current = yaysnd;
+
+    const boosnd = new Audio(BooSound);
+    boosnd.load();
+    booSoundRef.current = boosnd;
+
+    const nopesnd = new Audio(NopeSound);
+    nopesnd.load();
+    nopeSoundRef.current = nopesnd;
+
+    const invalidsnd = new Audio(InvalidSound);
+    invalidsnd.load();
+    invalidSoundRef.current = invalidsnd;
+
+
+  }, [])
+
+  useEffect(() => {
+
     //This plays the audio on win or lose
 
     if(gameWon){
 
-      const audio = new Audio(YaySound);
-      audio.play();
+      yaySoundRef.current.play();
       statusButtonRef.current.scrollIntoView({behaviour: "smooth"});
 
     } else if(gameLost){
 
-      const audio = new Audio(BooSound);
-      audio.play();
+      booSoundRef.current.play();
       statusButtonRef.current.scrollIntoView({behaviour: "smooth"});
 
     }
@@ -274,7 +314,7 @@ function App() {
       </header>
       <main>
         <section id="description">
-          <p>Try to figure out the word in 6 guesses! Use your keyboard to input the letters and press ENTER when you're done. You can use backspace if you make a mistake.</p>
+          <p>Guess the word in 6 tries! Type in letters and press ENTER to submit your guess, and use BACKSPACE to correct mistakes.</p>
         </section>
 
         <section id="attempts">
