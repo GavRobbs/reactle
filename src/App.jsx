@@ -104,7 +104,6 @@ function App() {
 
             }
 
-            console.log(threeCount);
             
             if(threeCount < 5){
               nopeSoundRef.current.play().catch(err => {
