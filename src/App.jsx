@@ -9,7 +9,9 @@ import YaySound from './assets/yay.wav';
 import NopeSound from "./assets/nope.wav";
 import InvalidSound from "./assets/invalid.mp3";
 import clsx from 'clsx';
-
+import RightLetterImg from "./assets/rightletter.png";
+import WrongLetterImg from "./assets/wrongletter.png";
+import WrongPosImg from "./assets/wrongpos.png";
 
 function App() {
 
@@ -26,6 +28,7 @@ function App() {
       return {letter : l, status: 0};
     })
   });
+  const [instructionDialogActive, setInstructionDialogActive] = useState(true);
 
   const statusButtonRef = useRef(null);
   const booSoundRef = useRef(null);
@@ -312,9 +315,6 @@ function App() {
         <h1>Reactle</h1>
       </header>
       <main>
-        <section id="description">
-          <p>Guess the word in 6 tries! Type in letters and press ENTER to submit your guess, and use BACKSPACE to correct mistakes.</p>
-        </section>
 
         <section id="attempts">
           {renderGuesses()}
@@ -335,19 +335,47 @@ function App() {
           </div>
         </div>
 
+        {
+          instructionDialogActive &&
+          <div className="dialog-overlay">
+            <div className="dialog">
+              <h1 className="dialog-header-instruction">Reactle</h1>
+              <p className="dialog-info italic">Imagine if Wordle actively hated you.</p>
+              <h2 className="dialog-header-subheading">How To Play</h2>
+              <p className="dialog-info">Guess the word in 6 tries. Type in letters and press enter to submit your guess and use backspace to correct mistakes.</p>
+              <p className="dialog-info">Use the hints from previous guesses to guide you.</p>
+              <div className="dialog-explainer-list">
+                <div className="dialog-explainer">
+                <img src={RightLetterImg} />
+                The letter is in the word and the position is correct.
+                </div>
+                <div className="dialog-explainer">
+                <img src={WrongPosImg} />
+                The letter is in the word and but the position is incorrect.
+                </div>
+                <div className="dialog-explainer">
+                <img src={WrongLetterImg} />
+                The letter is not in the word at all.
+                </div>                
+              </div>
+              <button className="winbutton" onClick={() => setInstructionDialogActive(false)}>START</button>
+            </div>
+          </div>
+        }
+
         { gameOver && 
-        <div className="replay-dialog-overlay">
-          <div className="replay-dialog">
+        <div className="dialog-overlay">
+          <div className="dialog">
             {gameWon && 
             <>
-              <h1 className="replay-dialog-header">You won!</h1>
+              <h1 className="dialog-header">You won!</h1>
               <button className="winbutton" ref={statusButtonRef} onClick={replay}>Play again?</button>
             </>
             }
             {gameLost && 
             <>
-              <h1 className="replay-dialog-header">You lost!</h1>
-              <p className="replay-dialog-info">The word is {currentWord.toUpperCase()}.</p>
+              <h1 className="dialog-header">You lost!</h1>
+              <p className="dialog-info">The word is {currentWord.toUpperCase()}.</p>
               <button className="losebutton" ref={statusButtonRef} onClick={replay}>Play again?</button>
             </>
             }
