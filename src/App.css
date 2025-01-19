@@ -5,12 +5,22 @@ header{
   padding: 0.4em;
   background-color: #904C77;
   font-family: 'Noto Sans';
+  justify-content: space-between;
 }
 
 header > h1{
   color: #F3E5AB;
   font-size: 1.5em;
   font-weight: 700;
+}
+
+header > button{
+
+  background-color: #904C77;
+  border: 0px;
+  outline: none;
+  font-size: 1.5em;
+
 }
 
 main{
