@@ -391,7 +391,7 @@ function App() {
                 </div>
                 <div className="dialog-explainer">
                 <img src={WrongPosImg} />
-                The letter is in the word and but the position is incorrect.
+                The letter is in the word but the position is incorrect.
                 </div>
                 <div className="dialog-explainer">
                 <img src={WrongLetterImg} />
