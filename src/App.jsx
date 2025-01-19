@@ -29,12 +29,20 @@ function App() {
     })
   });
   const [instructionDialogActive, setInstructionDialogActive] = useState(true);
+  const [soundOn, setSoundOn] = useState(() => {
+    const soundEnabled = localStorage.getItem("reactle_soundOn");
+    return soundEnabled === null ? true : JSON.parse(soundEnabled);
+  });
 
   const statusButtonRef = useRef(null);
   const booSoundRef = useRef(null);
   const yaySoundRef = useRef(null);
   const nopeSoundRef = useRef(null);
   const invalidSoundRef = useRef(null);
+
+  //This helps me keep track of the latest value of sound on/off, this
+  //was hell to figure out
+  const soundOnRef = useRef(soundOn);
 
   //Derived variables here
   const gameWon = currentGuesses.guessData.includes(currentWord) && currentGuesses.awaitingEnter == false;
@@ -67,9 +75,12 @@ function App() {
     
             })
 
-            invalidSoundRef.current.play().catch((err) => {
-              console.log("Playback error");
-            });
+            if(soundOn){
+              invalidSoundRef.current.play().catch((err) => {
+                console.log("Playback error");
+              });
+            }
+           
 
             return {...prev, awaitingEnter: false, currentLine: prev.currentLine, cursorPosition: prev.currentLine * 5, guessData: cleared};
 
@@ -109,9 +120,15 @@ function App() {
 
             
             if(threeCount < 5){
-              nopeSoundRef.current.play().catch(err => {
-                console.log("Playback error");
-              });
+
+              /* Use the ref here to get the latest value to see if sound is on or not. I had a bug where this wasn't updating and it was driving me mad. Lesson: REACT STATE UPDATES ARE ASYNCHRONOUS - this is easy to remember, hard to apply. If you're going to need the latest component of a value deep in something, you need to create an effect with a dependency to that value then a ref to it. I also considered using localStorage, but I couldn't bother with parsing the simple JSON every time.*/
+              
+              if(soundOnRef.current){
+                nopeSoundRef.current.play().catch(err => {
+                  console.log("Playback error");
+                });
+              } 
+ 
             }
 
             return {...prev, 
@@ -263,7 +280,21 @@ function App() {
     invalidSoundRef.current = invalidsnd;
 
 
-  }, [])
+  }, []);
+
+  useEffect(() => {
+
+    soundOnRef.current = soundOn;
+
+  }, [soundOn]);
+
+  function toggleSound(){
+    setSoundOn((prev) => {
+      const newState = !prev;
+      localStorage.setItem("reactle_soundOn", JSON.stringify(newState));
+      return newState;
+    })
+  }
 
   useEffect(() => {
 
@@ -271,17 +302,23 @@ function App() {
 
     if(gameWon){
 
-      yaySoundRef.current.play();
+      if(soundOn){
+        yaySoundRef.current.play();
+      }
       statusButtonRef.current.scrollIntoView({behaviour: "smooth"});
 
     } else if(gameLost){
 
-      booSoundRef.current.play();
+      if(soundOn){
+        booSoundRef.current.play();
+      }
       statusButtonRef.current.scrollIntoView({behaviour: "smooth"});
 
     }
+
+    /* I didn't expect to have to add soundOn for it to work, but you know, it is a dependency*/
     
-  }, [gameWon, gameLost])
+  }, [gameWon, gameLost, soundOn])
 
 
   function renderGuesses(){
@@ -313,6 +350,9 @@ function App() {
     <>
       <header>
         <h1>Reactle</h1>
+        <button 
+          className="sound-button" 
+          onClick={toggleSound}>{soundOn ? "🔊": "🔈"}</button>
       </header>
       <main>
 
