@@ -5,6 +5,6 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   plugins: [react()],
   build: {
-    outDir: 'reactle', //Thats what I call it on the server
+    outDir: 'reactle',
   }
 })
