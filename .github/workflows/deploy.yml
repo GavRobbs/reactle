@@ -1,0 +1,43 @@
+name: Deploy React App
+
+on:
+  push:
+    branches:
+      - main  # Adjust if your default branch is different
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout the repository
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      # Set up Node.js
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 22  # Use the version your app requires
+
+      # Install dependencies
+      - name: Install Dependencies
+        run: npm install
+
+      # Build the React app
+      - name: Build React App
+        run: npm run build
+
+      # Deploy to the Droplet
+      - name: Deploy to DigitalOcean
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+        run: |
+          # Set up SSH
+          mkdir -p ~/.ssh
+          echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H 142.93.189.75 >> ~/.ssh/known_hosts
+
+          # Transfer files
+          rsync -avz --delete gavrofun/ gavin@142.93.189.75:/var/www/gavrofun
