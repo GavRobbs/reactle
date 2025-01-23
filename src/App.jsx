@@ -122,7 +122,7 @@ function App() {
             if(threeCount < 5){
 
               /* Use the ref here to get the latest value to see if sound is on or not. I had a bug where this wasn't updating and it was driving me mad. Lesson: REACT STATE UPDATES ARE ASYNCHRONOUS - this is easy to remember, hard to apply. If you're going to need the latest component of a value deep in something, you need to create an effect with a dependency to that value then a ref to it. I also considered using localStorage, but I couldn't bother with parsing the simple JSON every time.*/
-              
+
               if(soundOnRef.current){
                 nopeSoundRef.current.play().catch(err => {
                   console.log("Playback error");
